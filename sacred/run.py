@@ -393,6 +393,7 @@ class Run(object):
     def _safe_call(self, obs, method, **kwargs):
         if obs not in self._failed_observers and hasattr(obs, method):
             try:
+                print('attempt _safe_call: {}'.format(method))
                 getattr(obs, method)(**kwargs)
             except Exception as e:
                 self._failed_observers.append(obs)
