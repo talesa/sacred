@@ -246,6 +246,7 @@ class MongoObserver(RunObserver):
         import pymongo.errors
 
         try:
+
             self.runs.replace_one({'_id': self.run_entry['_id']},
                                   self.run_entry)
         except pymongo.errors.AutoReconnect:
