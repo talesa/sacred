@@ -338,7 +338,6 @@ class Run(object):
         # Read all measured metrics since last heartbeat
         logged_metrics = self._metrics.get_last_metrics()
         metrics_by_name = linearize_metrics(logged_metrics)
-        self.run_logger.warning("_emit_heartbeat")
         for observer in self.observers:
             self._safe_call(observer, 'log_metrics',
                             metrics_by_name=metrics_by_name,
@@ -396,6 +395,7 @@ class Run(object):
             try:
                 print('attempt _safe_call: {}'.format(method))
                 getattr(obs, method)(**kwargs)
+                print('after attempt _safe_call: {}'.format(method))
             except Exception as e:
                 self._failed_observers.append(obs)
                 self.run_logger.warning("An error ocurred in the '{}' "
