@@ -380,6 +380,7 @@ class Run(object):
                             filename=filename)
 
     def _safe_call(self, obs, method, **kwargs):
+        print('start _safe_call')
         if obs not in self._failed_observers and hasattr(obs, method):
             try:
                 getattr(obs, method)(**kwargs)
