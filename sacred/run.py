@@ -338,6 +338,7 @@ class Run(object):
         # Read all measured metrics since last heartbeat
         logged_metrics = self._metrics.get_last_metrics()
         metrics_by_name = linearize_metrics(logged_metrics)
+        print('_emit_heartbeat')
         for observer in self.observers:
             self._safe_call(observer, 'log_metrics',
                             metrics_by_name=metrics_by_name,
