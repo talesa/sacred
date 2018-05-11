@@ -15,6 +15,7 @@ from sacred.observers.base import RunObserver
 from sacred.serializer import flatten
 from sacred.utils import ObserverError
 
+import pymongo.errors
 
 DEFAULT_MONGO_PRIORITY = 30
 
@@ -234,8 +235,6 @@ class MongoObserver(RunObserver):
                     .append({"name": key, "id": str(result.upserted_id)})
 
     def insert(self):
-        import pymongo.errors
-
         if self.overwrite:
             return self.save()
 
@@ -256,8 +255,6 @@ class MongoObserver(RunObserver):
                     raise
 
     def save(self):
-        import pymongo.errors
-
         try:
             print('before self.runs.replace_one')
             self.runs.replace_one({'_id': self.run_entry['_id']},
@@ -273,8 +270,6 @@ class MongoObserver(RunObserver):
             print(e)
 
     def final_save(self, attempts):
-        import pymongo.errors
-
         for i in range(attempts):
             try:
                 self.runs.save(self.run_entry)
