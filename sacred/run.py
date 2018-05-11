@@ -256,15 +256,28 @@ class Run(object):
 
     def _start_heartbeat(self):
         if self.beat_interval > 0:
-            self._stop_heartbeat_event, self._heartbeat = IntervalTimer.create(
-                self._emit_heartbeat, self.beat_interval)
+            from apscheduler.schedulers.background import BackgroundScheduler
+            self._heartbeat = BackgroundScheduler()
+            self._heartbeat.add_job(self._emit_heartbeat,
+                                    'interval', seconds=self.beat_interval)
             self._heartbeat.start()
+
+    # def _start_heartbeat(self):
+    #     if self.beat_interval > 0:
+    #         self._stop_heartbeat_event, self._heartbeat = IntervalTimer.create(
+    #             self._emit_heartbeat, self.beat_interval)
+    #         self._heartbeat.start()
 
     def _stop_heartbeat(self):
         # only stop if heartbeat was started
         if self._heartbeat is not None:
-            self._stop_heartbeat_event.set()
-            self._heartbeat.join(2)
+            self._heartbeat.shutdown()
+
+    # def _stop_heartbeat(self):
+    #     # only stop if heartbeat was started
+    #     if self._heartbeat is not None:
+    #         self._stop_heartbeat_event.set()
+    #         self._heartbeat.join(2)
 
     def _emit_queued(self):
         self.status = 'QUEUED'
