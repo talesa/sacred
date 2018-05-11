@@ -82,7 +82,7 @@ class Run(object):
         self.meta_info = {}
         """A custom comment for this run"""
 
-        self.beat_interval = 10.0  # sec
+        self.beat_interval = 0  # sec
         """The time between two heartbeat events measured in seconds"""
 
         self.unobserved = False
