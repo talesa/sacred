@@ -214,7 +214,20 @@ class MongoObserver(RunObserver):
                     "timestamps": {"$each": metrics_by_name[key]["timestamps"]}
                     }
             update = {"$push": push}
-            result = self.metrics.update_one(query, update, upsert=True)
+
+            try:
+                print('before self.metrics.update_one')
+                result = self.metrics.update_one(query, update, upsert=True)
+                print('after self.metrics.update_one')
+            except pymongo.errors.AutoReconnect:
+                print('pymongo.errors.AutoReconnect')
+                pass  # just wait for the next save
+            except pymongo.errors.InvalidDocument:
+                raise ObserverError('Run contained an unserializable entry.'
+                                    '(most likely in the info)')
+            except Exception as e:
+                print(e)
+
             if result.upserted_id is not None:
                 # This is the first time we are storing this metric
                 info.setdefault("metrics", []) \
