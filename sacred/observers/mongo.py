@@ -220,6 +220,11 @@ class MongoObserver(RunObserver):
                 print('before self.metrics.update_one')
                 result = self.metrics.update_one(query, update, upsert=True)
                 print('after self.metrics.update_one')
+
+                if result.upserted_id is not None:
+                    # This is the first time we are storing this metric
+                    info.setdefault("metrics", []) \
+                        .append({"name": key, "id": str(result.upserted_id)})
             except pymongo.errors.AutoReconnect:
                 print('pymongo.errors.AutoReconnect')
                 pass  # just wait for the next save
@@ -228,11 +233,6 @@ class MongoObserver(RunObserver):
                                     '(most likely in the info)')
             except Exception as e:
                 print(e)
-
-            if result.upserted_id is not None:
-                # This is the first time we are storing this metric
-                info.setdefault("metrics", []) \
-                    .append({"name": key, "id": str(result.upserted_id)})
 
     def insert(self):
         if self.overwrite:
