@@ -150,6 +150,7 @@ class MongoObserver(RunObserver):
         self.run_entry['captured_out'] = captured_out
         self.run_entry['heartbeat'] = beat_time
         self.run_entry['result'] = flatten(result)
+        print('heartbeat_event')
         self.save()
 
     def completed_event(self, stop_time, result):
