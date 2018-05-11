@@ -321,6 +321,7 @@ class Run(object):
             self.run_logger.info('Started run with ID "{}"'.format(self._id))
 
     def _emit_heartbeat(self):
+        print('start _emit_heartbeat')
         beat_time = datetime.datetime.utcnow()
         self._get_captured_output()
         # Read all measured metrics since last heartbeat
