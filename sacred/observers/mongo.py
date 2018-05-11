@@ -247,14 +247,18 @@ class MongoObserver(RunObserver):
         import pymongo.errors
 
         try:
-
+            print('before self.runs.replace_one')
             self.runs.replace_one({'_id': self.run_entry['_id']},
                                   self.run_entry)
+            print('after self.runs.replace_one')
         except pymongo.errors.AutoReconnect:
+            print('pymongo.errors.AutoReconnect')
             pass  # just wait for the next save
         except pymongo.errors.InvalidDocument:
             raise ObserverError('Run contained an unserializable entry.'
                                 '(most likely in the info)')
+        except Exception as e:
+            print(e)
 
     def final_save(self, attempts):
         import pymongo.errors
